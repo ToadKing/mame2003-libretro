@@ -447,7 +447,7 @@ CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DBGDEFS)
 
 OBJECTS := $(SOURCES_C:.c=.o)
 
-OBJOUT   = -o
+OBJOUT   = -o 
 LINKOUT  = -o 
 
 ifneq (,$(findstring msvc,$(platform)))
@@ -470,7 +470,9 @@ endef
 
 all:	$(TARGET)
 $(TARGET): $(OBJECTS)
-ifeq ($(STATIC_LINKING),1)
+ifeq ($(platform), emscripten)
+	$(CC) $(CFLAGS) $(OBJECTS) $(OBJOUT)$@
+else ifeq ($(STATIC_LINKING),1)
 	@echo Archiving $@...
 ifeq ($(SPLIT_UP_LINK), 1)
 	$(AR) rcs $@ $(foreach OBJECTS,$(OBJECTS),$(NEWLINE) $(AR) q $@ $(OBJECTS))
